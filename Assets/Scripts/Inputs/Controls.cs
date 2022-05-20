@@ -136,6 +136,34 @@ namespace Inputs
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Computer"",
+            ""id"": ""90a46ed5-c443-469b-9288-16063074afbc"",
+            ""actions"": [
+                {
+                    ""name"": ""Cursor"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""c71f0e69-0bae-4c84-855a-7f69bdf6c7b7"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""2b6879bb-4856-4f8c-812b-7fb2635dac94"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Cursor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -162,6 +190,9 @@ namespace Inputs
             m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
             m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+            // Computer
+            m_Computer = asset.FindActionMap("Computer", throwIfNotFound: true);
+            m_Computer_Cursor = m_Computer.FindAction("Cursor", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -266,6 +297,39 @@ namespace Inputs
             }
         }
         public PlayerActions @Player => new PlayerActions(this);
+
+        // Computer
+        private readonly InputActionMap m_Computer;
+        private IComputerActions m_ComputerActionsCallbackInterface;
+        private readonly InputAction m_Computer_Cursor;
+        public struct ComputerActions
+        {
+            private @Controls m_Wrapper;
+            public ComputerActions(@Controls wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Cursor => m_Wrapper.m_Computer_Cursor;
+            public InputActionMap Get() { return m_Wrapper.m_Computer; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(ComputerActions set) { return set.Get(); }
+            public void SetCallbacks(IComputerActions instance)
+            {
+                if (m_Wrapper.m_ComputerActionsCallbackInterface != null)
+                {
+                    @Cursor.started -= m_Wrapper.m_ComputerActionsCallbackInterface.OnCursor;
+                    @Cursor.performed -= m_Wrapper.m_ComputerActionsCallbackInterface.OnCursor;
+                    @Cursor.canceled -= m_Wrapper.m_ComputerActionsCallbackInterface.OnCursor;
+                }
+                m_Wrapper.m_ComputerActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Cursor.started += instance.OnCursor;
+                    @Cursor.performed += instance.OnCursor;
+                    @Cursor.canceled += instance.OnCursor;
+                }
+            }
+        }
+        public ComputerActions @Computer => new ComputerActions(this);
         private int m_KeyboardSchemeIndex = -1;
         public InputControlScheme KeyboardScheme
         {
@@ -280,6 +344,10 @@ namespace Inputs
             void OnMovement(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
+        }
+        public interface IComputerActions
+        {
+            void OnCursor(InputAction.CallbackContext context);
         }
     }
 }

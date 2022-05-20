@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 4
+  m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2265.9883, g: 2406.584, b: 3615.4531, a: 1}
+  m_IndirectSpecularColor: {r: 2268.5322, g: 2409.1113, b: 3617.6562, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -918,6 +918,7 @@ GameObject:
   - component: {fileID: 607984322}
   - component: {fileID: 607984321}
   - component: {fileID: 607984320}
+  - component: {fileID: 607984326}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -944,13 +945,8 @@ MonoBehaviour:
   minLookAngle: -60
   maxLookAngle: 75
   invertY: 0
-  inspecInteractable: {fileID: 56311830}
-  interactableMask:
-    serializedVersion: 2
-    m_Bits: 64
-  maxInteractableDistance: 8
-  currentInteractableName: 
-  currentInteraction: {fileID: 0}
+  stepHeight: 0.15
+  stepDistance: 0.1
 --- !u!54 &607984321
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1043,10 +1039,30 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1823688467}
+  - {fileID: 850758516}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &607984326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607984319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd559eeb111fedd4b9d216434108b2a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inspecInteractable: {fileID: 56311830}
+  interactableMask:
+    serializedVersion: 2
+    m_Bits: 64
+  maxInteractableDistance: 8
+  currentInteractableName: 
+  currentInteraction: {fileID: 0}
+  cam: {fileID: 1823688466}
 --- !u!1001 &611727231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1235,6 +1251,38 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.5320707, y: 0.4102322, z: 0.31692156}
   m_Center: {x: -0.018832812, y: 0.030307673, z: 0.15776956}
+--- !u!1 &850758515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 850758516}
+  m_Layer: 0
+  m_Name: Camera Holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &850758516
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850758515}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1823688467}
+  m_Father: {fileID: 607984325}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1056478572
 GameObject:
   m_ObjectHideFlags: 0
@@ -2754,12 +2802,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823688464}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 56311830}
-  m_Father: {fileID: 607984325}
+  m_Father: {fileID: 850758516}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1823688468

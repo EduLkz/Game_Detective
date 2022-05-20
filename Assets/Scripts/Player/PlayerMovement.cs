@@ -17,14 +17,39 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float maxLookAngle = 75;
     [SerializeField] private bool invertY = false;
 
-    [Header("Interact")]
-    [SerializeField] private Transform inspecInteractable;
-    [SerializeField] private LayerMask interactableMask;
-    [SerializeField] private float maxInteractableDistance = 8f;
-    [SerializeField] private string currentInteractableName;
-    [SerializeField] private Interactable currentInteraction;
+    [Header("Step info")]
+    [SerializeField] private float stepHeight = .15f;
+    [SerializeField] private float stepDistance = .1f;
+    private Transform camParent;
+    private float lastStep;
+    private float defaultHeight;
+    private float stepDuration = 1.75f;
+
+    private void Step() {
+
+        if(movementInput == Vector2.zero) {
+            lastStep = 0;
+            camParent.position = Vector3.up * defaultHeight;
+
+            return;
+        }
+
+        float _sd = stepDistance;
+        if(running) {
+            _sd = stepDistance / stepDuration;
+        }
+        lastStep = Time.time + _sd;
+
+
+
+        if((lastStep + _sd) / 2f < Time.time) {
+            camParent.localPosition = Vector3.up * (defaultHeight + stepHeight);
+        } else {
+            camParent.localPosition = Vector3.up * defaultHeight;
+        }
+    }
+
     
-    private bool interacting;
 
     Vector2 mouseInput;
     Vector2 movementInput;
@@ -47,6 +72,8 @@ public class PlayerMovement : MonoBehaviour {
     private void Start() {
         body = GetComponent<Rigidbody>();
         cam = GetComponentInChildren<Camera>();
+        camParent = cam.transform.parent;
+        defaultHeight = camParent.localPosition.y;
 
 
         if(actions == null) actions = new Controls();
@@ -58,7 +85,6 @@ public class PlayerMovement : MonoBehaviour {
         actions.Player.Look.performed += ctx => GetMouseInput(ctx.ReadValue<Vector2>());
         actions.Player.Look.canceled += ctx => GetMouseInput(Vector2.zero);
 
-        actions.Player.Interact.performed += ctx => GetInteractionInput();
     }
 
     #region Input Actions
@@ -67,17 +93,17 @@ public class PlayerMovement : MonoBehaviour {
 
     private void GetMouseInput(Vector2 value) => mouseInput = value;
 
-    private void GetInteractionInput() => UseInteraction();
+    
     #endregion
 
     #region Updates
     private void Update() {
         Look();
+        Step();
     }
 
     private void FixedUpdate() {
         Movement();
-        CheckForInteractable();
     }
     #endregion
 
@@ -110,42 +136,6 @@ public class PlayerMovement : MonoBehaviour {
         transform.localRotation = Quaternion.AngleAxis(mouseLook.x, Vector3.up);
     }
 
-    private void CheckForInteractable() {
-        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, maxInteractableDistance, interactableMask)) {
-            currentInteractableName = hit.transform.name;
-        } else {
-            if(!currentInteractableName.Equals(string.Empty)) {
-                currentInteractableName = string.Empty;
-            }
-        }
-    }
-
-    private void UseInteraction() {
-        if(interacting) {
-            if(currentInteraction != null) {
-                currentInteraction.Interact(inspecInteractable);
-                currentInteraction = null;
-                
-            }
-
-            interacting = false;
-            return;
-        }
-        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, maxInteractableDistance, interactableMask)) {
-            currentInteraction = hit.transform.GetComponent<Interactable>();
-            if(currentInteraction != null) {
-                interacting = (currentInteraction.GetInteractableType() == InteractableType.inspect);
-
-                switch(currentInteraction.GetInteractableType()) {
-                    case InteractableType.inspect:
-                        currentInteraction.Interact(inspecInteractable);
-                        break;
-                    case InteractableType.callPhoto:
-                        currentInteraction.Interact(hit.point, transform.position);
-                        break;
-                }
-            }
-        }
-    }
+    
     #endregion
 }

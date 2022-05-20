@@ -112,6 +112,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Computer",
+            "id": "90a46ed5-c443-469b-9288-16063074afbc",
+            "actions": [
+                {
+                    "name": "Cursor",
+                    "type": "PassThrough",
+                    "id": "c71f0e69-0bae-4c84-855a-7f69bdf6c7b7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2b6879bb-4856-4f8c-812b-7fb2635dac94",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Cursor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
